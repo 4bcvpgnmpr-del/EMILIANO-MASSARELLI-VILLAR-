@@ -80,6 +80,10 @@ nav a:hover{color:var(--ink)}
 .card p{color:var(--muted);margin:10px 0 18px;flex:1;font-size:.97rem}
 .card .meta{margin:0 0 14px}
 .chip.on{background:var(--accent);color:var(--onaccent);border-color:var(--accent);font-weight:700}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:28px}
+.gal figure{margin:0}
+.gal img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;display:block}
+.gal figcaption{font-size:.9rem;color:var(--muted);margin-top:6px}
 /* programs */
 .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin-top:36px;align-items:stretch}
 .tier{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:28px;display:flex;flex-direction:column}
@@ -166,12 +170,17 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 </div></section>
 
 <section id="sobre-mi"><div class="wrap about">
-  <div class="photo">Aquí va tu foto.<br>Sustituye este bloque por una imagen tuya en la cancha.</div>
+  <div class="photo" id="foto">Aquí va tu foto.<br>Sustituye este bloque por una imagen tuya en la cancha.</div>
   <div>
     <h2>Sobre mí</h2>
     <p class="lead">Soy entrenador de baloncesto y llevo años trabajando con equipos de formación y competición. Aquí cuento lo que he aprendido en la pista, con ejemplos reales y lenguaje claro, para que puedas aplicarlo en tu próximo entrenamiento.</p>
     <div class="nums"><div><b>15+</b><span>años en la banca</span></div><div><b>300+</b><span>jugadores entrenados</span></div><div><b>8</b><span>temporadas en competición</span></div></div>
   </div>
+</div></section>
+
+<section id="galeria" hidden style="background:var(--panel);border-block:1px solid var(--line)"><div class="wrap">
+  <h2>Galería</h2>
+  <div class="gal" id="gal"></div>
 </div></section>
 
 <section id="contacto" style="padding-top:0"><div class="wrap"><div class="box">
@@ -189,10 +198,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 // yt = ID del vídeo de YouTube (lo que va después de v= en la URL)
 var HG={pnr:"",horns:"",back:"",zona:"",ayuda:"",ice:""};
 var VIDEOS=[
- {t:"Los 5 fundamentos del tiro",d:"Posición, mecánica y lectura de la defensa. 12 min.",tag:"Gratis",yt:""},
- {t:"Cómo leer un bloqueo directo",d:"Las cuatro defensas posibles y cómo atacar cada una. 18 min.",tag:"Gratis",yt:""},
- {t:"Defensa en zona 2-3 completa",d:"Posiciones, ayudas y rotaciones con análisis de partidos. 45 min.",tag:"Programa",yt:""},
- {t:"Sesión de entrenamiento paso a paso",d:"Calentamiento, ejercicios y juego reducido. 60 min.",tag:"Programa",yt:""}
+ {t:"Los 5 fundamentos del tiro",d:"Posición, mecánica y lectura de la defensa. 12 min.",tag:"Gratis",yt:"",file:"",poster:""},
+ {t:"Cómo leer un bloqueo directo",d:"Las cuatro defensas posibles y cómo atacar cada una. 18 min.",tag:"Gratis",yt:"",file:"",poster:""},
+ {t:"Defensa en zona 2-3 completa",d:"Posiciones, ayudas y rotaciones con análisis de partidos. 45 min.",tag:"Programa",yt:"",file:"",poster:""},
+ {t:"Sesión de entrenamiento paso a paso",d:"Calentamiento, ejercicios y juego reducido. 60 min.",tag:"Programa",yt:"",file:"",poster:""}
 ];
 var PLAYBOOKS=[
  {t:"Ataque contra defensa individual",d:"Bloqueos directos e indirectos, Horns y continuidades para atacar hombre a hombre.",n:12,tag:"Gratis",s:"Ofensiva",hg:""},
@@ -209,6 +218,11 @@ var ANALISIS=[
  {k:"Artículo",t:"Estadísticas útiles para entrenadores de formación",d:"Qué números merece la pena registrar y cuáles solo hacen ruido.",tag:"Premium",s:"Ambas",url:""},
  {k:"Vídeo",t:"Ayudas y rotaciones en defensa de zona",d:"Análisis de jugadas reales: quién ayuda, quién rota y dónde se rompe la zona.",tag:"Premium",s:"Defensiva",url:""}
 ];
+// FOTO: tu foto para la sección "Sobre mí", guardada en la carpeta images
+var FOTO="";   // ejemplo: "images/foto.jpg"
+// GALERIA: fotos para la sección Galería (si la dejas vacía, la sección no aparece)
+var GALERIA=[]; // ejemplo: [{src:"images/entreno1.jpg",t:"Sesión de tiro"},{src:"images/equipo.jpg",t:""}]
+// En VIDEOS puedes usar yt (YouTube) o file (vídeo en la carpeta videos, ej: "videos/tiro.mp4"), y poster (imagen de portada, ej: "images/portada-tiro.jpg")
 // ================================================
 // Jugadas: p = jugadores [n,x,y]; m = movimiento, s = pase, b = bloqueo (x1,y1,x2,y2)
 var PLAYS=[
@@ -270,6 +284,7 @@ filt(document.getElementById("pf"),[{key:"t",opts:["Todas","Ofensiva","Defensiva
 document.getElementById("heroBoard").innerHTML=boardSVG(PLAYS[0]);
 
 document.getElementById("vids").innerHTML=VIDEOS.map(function(v){
+ if(v.file)return '<div class="vid"><video controls playsinline preload="metadata"'+(v.poster?' poster="'+v.poster+'"':'')+' src="'+v.file+'" style="width:100%;aspect-ratio:16/9;background:#000;display:block"></video><div class="tx"><h3>'+v.t+'</h3><p>'+v.d+'</p></div></div>';
  var l=v.yt?'href="https://www.youtube.com/watch?v='+v.yt+'" target="_blank" rel="noopener"':'href="#contacto"';
  return '<a class="vid" '+l+'><div class="thumb"><span class="tag'+(v.tag=="Gratis"?'':' pro')+'">'+v.tag+'</span><svg class="bg" viewBox="0 0 320 180"><circle cx="160" cy="90" r="50" fill="none" stroke="#FFF4E0" stroke-width="3"/><path d="M160 40V140M110 90H210" stroke="#FFF4E0" stroke-width="3"/></svg><span class="play"></span></div><div class="tx"><h3>'+v.t+'</h3><p>'+v.d+'</p></div></a>';
 }).join("");
@@ -302,6 +317,12 @@ filt(document.getElementById("anf"),[{key:"acc",opts:["Todos","Gratis","Premium"
   return '<div class="card alt"><div class="meta"><span class="chip'+(a.tag=="Gratis"?' on':'')+'">'+a.tag+'</span><span class="chip">'+sd(a.s)+'</span><span class="chip">'+a.k+'</span></div><h3>'+a.t+'</h3><p>'+a.d+'</p><a class="btn ghost" '+lnk(a.url)+'>'+(a.url?'Ver análisis':'Solicitar acceso')+'</a></div>';
  }).join(""):EMPTY;
 });
+if(FOTO){var fo=document.getElementById("foto");fo.style.padding="0";fo.style.overflow="hidden";fo.innerHTML='<img src="'+FOTO+'" alt="Emiliano Massarelli Villar" style="width:100%;height:100%;object-fit:cover">'}
+if(GALERIA.length){
+ document.getElementById("galeria").hidden=false;
+ document.getElementById("gal").innerHTML=GALERIA.map(function(g){return '<figure><img loading="lazy" src="'+g.src+'" alt="'+(g.t||"Foto de entrenamiento")+'">'+(g.t?'<figcaption>'+g.t+'</figcaption>':'')+'</figure>'}).join("");
+ var nv=document.querySelector("nav"),na=document.createElement("a");na.href="#galeria";na.textContent="Galería";nv.insertBefore(na,nv.querySelector('a[href="#sobre-mi"]'));
+}
 show(0);
 document.getElementById("f").onsubmit=function(e){
  e.preventDefault();var f=e.target;
