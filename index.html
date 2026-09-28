@@ -190,9 +190,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 </div></div></section>
 </main>
 
-<footer><div class="wrap"><span>© 2026 Emiliano Massarelli Villar</span><span><a href="#">Instagram</a> · <a href="#">YouTube</a> · <a href="#">Aviso legal</a></span></div></footer>
+<footer><div class="wrap"><span>© 2026 Emiliano Massarelli Villar</span><span><a href="#">Instagram</a> · <a href="#">YouTube</a> · <a href="#">Aviso legal</a> · <a href="admin.html">Acceso entrenador</a></span></div></footer>
 
 <script>
+function main(){
 // ===== CONFIGURACIÓN: edita solo esta parte =====
 // hg = enlace para compartir de tu jugada en The Hoops Geek (Compartir > Copiar enlace)
 // yt = ID del vídeo de YouTube (lo que va después de v= en la URL)
@@ -224,6 +225,8 @@ var FOTO="";   // ejemplo: "images/foto.jpg"
 var GALERIA=[]; // ejemplo: [{src:"images/entreno1.jpg",t:"Sesión de tiro"},{src:"images/equipo.jpg",t:""}]
 // En VIDEOS puedes usar yt (YouTube) o file (vídeo en la carpeta videos, ej: "videos/tiro.mp4"), y poster (imagen de portada, ej: "images/portada-tiro.jpg")
 // ================================================
+// Si existe content.json (lo edita el panel admin.html), sus datos sustituyen a los de arriba
+var C=window.CONTENT||{};HG=C.HG||HG;FOTO=C.FOTO||FOTO;GALERIA=C.GALERIA||GALERIA;VIDEOS=C.VIDEOS||VIDEOS;PLAYBOOKS=C.PLAYBOOKS||PLAYBOOKS;ANALISIS=C.ANALISIS||ANALISIS;
 // Jugadas: p = jugadores [n,x,y]; m = movimiento, s = pase, b = bloqueo (x1,y1,x2,y2)
 var PLAYS=[
 {id:"pnr",name:"Bloqueo directo",lvl:"Todos los niveles",tipo:"Ofensiva",
@@ -329,6 +332,10 @@ document.getElementById("f").onsubmit=function(e){
  // Sustituye este correo por el tuyo, o conecta un servicio de emails (Mailchimp, ConvertKit...)
  location.href="mailto:emimassarelli05@gmail.com?subject="+encodeURIComponent("Quiero mi jugada gratis")+"&body="+encodeURIComponent("Nombre: "+f.n.value+"\nCorreo: "+f.e.value);
 };
+}
+</script>
+<script>
+fetch("content.json?t="+Date.now()).then(function(r){return r.ok?r.json():null}).catch(function(){return null}).then(function(c){window.CONTENT=c;main()});
 </script>
 </body>
 </html>
