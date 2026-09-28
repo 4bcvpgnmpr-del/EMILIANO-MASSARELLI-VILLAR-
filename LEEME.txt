@@ -1,2 +1,3 @@
-Guarda aquí tus imágenes (.jpg, .png, .webp). Consejo: menos de 1 MB cada una.
+Guarda aquí tus vídeos (.mp4). Consejo: 720p y menos de 50 MB cada uno.
+Para vídeos largos usa YouTube y pon solo el ID en index.html.
 Borra este archivo cuando quieras.
