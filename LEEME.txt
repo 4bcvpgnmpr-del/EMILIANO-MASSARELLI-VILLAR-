@@ -1,0 +1,15 @@
+WEB DE EMILIANO MASSARELLI VILLAR
+
+Carpetas:
+- index.html : la web (se edita con un editor de texto, por ejemplo VS Code)
+- images/    : tus fotos (foto de perfil, galería, portadas de vídeo)
+- videos/    : tus vídeos propios (mp4, cortos y comprimidos)
+
+Cómo usar tus archivos:
+1. Copia la foto a images/ (ejemplo: images/foto.jpg).
+2. En index.html busca  var FOTO=""  y escribe:  var FOTO="images/foto.jpg";
+3. Para un vídeo propio, copia el mp4 a videos/ y en VIDEOS pon:  file:"videos/tiro.mp4"
+4. Para un vídeo de YouTube, pon solo el ID en:  yt:"ID_DEL_VIDEO"
+5. Abre index.html con doble clic para comprobar los cambios antes de subirlos.
+
+Los nombres de archivo deben coincidir exactamente (mayúsculas y extensión).
