@@ -51,13 +51,13 @@ nav button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-col
 </div>
 <script>
 var S={
+ JUGADAS:{n:"Jugadas",f:[["t","Título"],["d","Descripción o pasos, breve"],["tipo","Enfoque",["Ofensiva","Defensiva"]],["tag","Acceso",["Gratis","Programa"]],["yt","ID de YouTube (déjalo vacío si subes archivo o pones enlace)"],["hg","Enlace en The Hoops Geek (opcional)"]],file:"file",acc:"video/*",fl:"Vídeo desde tu ordenador (opcional)"},
  VIDEOS:{n:"Vídeos",f:[["t","Título"],["d","Descripción"],["tag","Acceso",["Gratis","Programa"]],["yt","ID de YouTube (déjalo vacío si subes un archivo)"]],file:"file",acc:"video/*",fl:"Vídeo desde tu ordenador (opcional)"},
  PLAYBOOKS:{n:"Playbooks",f:[["t","Título"],["d","Descripción"],["n","Número de jugadas","number"],["tag","Acceso",["Gratis","Premium"]],["s","Enfoque",["Ofensiva","Defensiva","Ambas"]],["hg","Enlace del playbook en The Hoops Geek"]]},
  ANALISIS:{n:"Análisis",f:[["t","Título"],["d","Descripción"],["k","Tipo",["Vídeo","Informe","Artículo"]],["tag","Acceso",["Gratis","Premium"]],["s","Enfoque",["Ofensiva","Defensiva","Ambas"]],["url","Enlace (YouTube, artículo...) o sube un archivo abajo"]],file:"url",acc:"*",fl:"Archivo (PDF, vídeo...) (opcional)"},
  GALERIA:{n:"Galería",f:[["t","Pie de foto (opcional)"]],file:"src",acc:"image/*",fl:"Imagen",req:1}
 };
-var JUG={pnr:"Bloqueo directo",horns:"Horns",back:"Corte a la espalda",zona:"Zona 2-3",ayuda:"Ayuda y recuperación",ice:"Defensa del bloqueo (Ice)"};
-var C={},cur="VIDEOS",$=function(i){return document.getElementById(i)};
+var C={},cur="JUGADAS",$=function(i){return document.getElementById(i)};
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k)||"";if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return ""}}
 function say(t){var m=$("msg");m.textContent=t;m.style.display=t?"block":"none"}
 function gh(p,m,b){return fetch("https://api.github.com/repos/"+ls("repo")+"/contents/"+p+(m?"":"?t="+Date.now()),{method:m||"GET",headers:{Authorization:"Bearer "+ls("tok"),Accept:"application/vnd.github+json"},body:b?JSON.stringify(b):undefined})}
@@ -82,19 +82,13 @@ async function connect(){
 }
 function nav(){
  var n=$("nav");n.innerHTML="";
- Object.keys(S).concat(["JUG","FOTO"]).forEach(function(k){
-  var b=document.createElement("button");b.className="g";b.textContent=S[k]?S[k].n:(k=="JUG"?"Enlaces de jugadas":"Mi foto");
+ Object.keys(S).concat(["FOTO"]).forEach(function(k){
+  var b=document.createElement("button");b.className="g";b.textContent=S[k]?S[k].n:"Mi foto";
   b.setAttribute("aria-pressed",k==cur);b.onclick=function(){cur=k;nav();view(k);say("")};n.appendChild(b);
  });
 }
 function view(k){
  var v=$("view");
- if(k=="JUG"){
-  var H=C.HG||{};
-  v.innerHTML="<h2>Enlaces de jugadas</h2><p>Pega el enlace de compartir de cada jugada en The Hoops Geek.</p>"+Object.keys(JUG).map(function(x){return '<label for="h_'+x+'">'+JUG[x]+'</label><input id="h_'+x+'" value="'+esc(H[x])+'">'}).join("")+'<button id="sv">Guardar enlaces</button>';
-  $("sv").onclick=async function(){C.HG={};Object.keys(JUG).forEach(function(x){C.HG[x]=$("h_"+x).value.trim()});await run("Guardando...",function(){return save("Enlaces de jugadas")},k)};
-  return;
- }
  if(k=="FOTO"){
   v.innerHTML='<h2>Mi foto</h2><p>Aparece en la sección "Sobre mí".</p><label for="ff">Imagen</label><input id="ff" type="file" accept="image/*"><button id="sv">Subir foto</button>';
   $("sv").onclick=async function(){var f=$("ff").files[0];if(!f){say("Elige una imagen.");return}await run("Subiendo...",async function(){C.FOTO=await upload(f);await save("Cambiar foto")},k)};
