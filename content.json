@@ -1,0 +1,138 @@
+{
+ "HG": {
+  "pnr": "",
+  "horns": "",
+  "back": "",
+  "zona": "",
+  "ayuda": "",
+  "ice": ""
+ },
+ "FOTO": "",
+ "GALERIA": [],
+ "VIDEOS": [
+  {
+   "t": "Los 5 fundamentos del tiro",
+   "d": "Posición, mecánica y lectura de la defensa. 12 min.",
+   "tag": "Gratis",
+   "yt": "",
+   "file": "",
+   "poster": ""
+  },
+  {
+   "t": "Cómo leer un bloqueo directo",
+   "d": "Las cuatro defensas posibles y cómo atacar cada una. 18 min.",
+   "tag": "Gratis",
+   "yt": "",
+   "file": "",
+   "poster": ""
+  },
+  {
+   "t": "Defensa en zona 2-3 completa",
+   "d": "Posiciones, ayudas y rotaciones con análisis de partidos. 45 min.",
+   "tag": "Programa",
+   "yt": "",
+   "file": "",
+   "poster": ""
+  },
+  {
+   "t": "Sesión de entrenamiento paso a paso",
+   "d": "Calentamiento, ejercicios y juego reducido. 60 min.",
+   "tag": "Programa",
+   "yt": "",
+   "file": "",
+   "poster": ""
+  }
+ ],
+ "PLAYBOOKS": [
+  {
+   "t": "Ataque contra defensa individual",
+   "d": "Bloqueos directos e indirectos, Horns y continuidades para atacar hombre a hombre.",
+   "n": 12,
+   "tag": "Gratis",
+   "s": "Ofensiva",
+   "hg": ""
+  },
+  {
+   "t": "Ataque contra zona",
+   "d": "Cómo mover el balón y ocupar los huecos de las zonas 2-3, 3-2 y 1-3-1.",
+   "n": 10,
+   "tag": "Premium",
+   "s": "Ofensiva",
+   "hg": ""
+  },
+  {
+   "t": "Finales de partido",
+   "d": "Jugadas para el último tiro, saques de banda y de fondo, y situaciones especiales.",
+   "n": 8,
+   "tag": "Premium",
+   "s": "Ambas",
+   "hg": ""
+  },
+  {
+   "t": "Transición y juego rápido",
+   "d": "Los primeros tres segundos tras rebote o robo, y cómo convertirlos en canastas fáciles.",
+   "n": 6,
+   "tag": "Gratis",
+   "s": "Ofensiva",
+   "hg": ""
+  },
+  {
+   "t": "Defensa individual y ayudas",
+   "d": "Posición, ayudas, defensa del bloqueo directo y rotaciones en hombre a hombre.",
+   "n": 9,
+   "tag": "Gratis",
+   "s": "Defensiva",
+   "hg": ""
+  },
+  {
+   "t": "Defensas en zona y presión",
+   "d": "Zona 2-3, 1-3-1 y presión a toda pista: cuándo usarlas y cómo entrenarlas.",
+   "n": 7,
+   "tag": "Premium",
+   "s": "Defensiva",
+   "hg": ""
+  }
+ ],
+ "ANALISIS": [
+  {
+   "k": "Vídeo",
+   "t": "Análisis de partido: transición defensiva",
+   "d": "Revisamos las cinco pérdidas que más canastas fáciles regalaron y cómo evitarlas.",
+   "tag": "Gratis",
+   "s": "Defensiva",
+   "url": ""
+  },
+  {
+   "k": "Informe",
+   "t": "Scouting de un rival en 48 horas",
+   "d": "Mi método para preparar un partido: qué mirar, qué anotar y cómo contárselo al equipo.",
+   "tag": "Premium",
+   "s": "Ambas",
+   "url": ""
+  },
+  {
+   "k": "Vídeo",
+   "t": "Errores habituales en el 2 contra 1",
+   "d": "Decisiones de pase y de tiro que se repiten en categorías de formación.",
+   "tag": "Gratis",
+   "s": "Ofensiva",
+   "url": ""
+  },
+  {
+   "k": "Artículo",
+   "t": "Estadísticas útiles para entrenadores de formación",
+   "d": "Qué números merece la pena registrar y cuáles solo hacen ruido.",
+   "tag": "Premium",
+   "s": "Ambas",
+   "url": ""
+  },
+  {
+   "k": "Vídeo",
+   "t": "Ayudas y rotaciones en defensa de zona",
+   "d": "Análisis de jugadas reales: quién ayuda, quién rota y dónde se rompe la zona.",
+   "tag": "Premium",
+   "s": "Defensiva",
+   "url": ""
+  }
+ ]
+}
