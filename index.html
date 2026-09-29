@@ -27,8 +27,14 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:va
 .logo{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:1.5rem;text-decoration:none}
 .logo b{color:var(--accent)}
 nav{display:flex;gap:22px;align-items:center;font-weight:500;font-size:.95rem}
-nav a{text-decoration:none;color:var(--muted)}
-nav a:hover{color:var(--ink)}
+nav a,nav button.nlink{text-decoration:none;color:var(--muted);background:none;border:0;font:500 .95rem "DM Sans",sans-serif;cursor:pointer;padding:0}
+nav a:hover,nav button.nlink:hover{color:var(--ink)}
+nav button.nlink[aria-expanded="true"]{color:var(--accent)}
+.subpanel{display:none;border-bottom:1px solid var(--line);background:var(--bg)}
+.subpanel.open{display:block}
+.subpanel .row{display:flex;gap:8px;flex-wrap:wrap;padding:14px 0}
+.subpanel button{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:99px;padding:8px 16px;font:500 .9rem "DM Sans",sans-serif;cursor:pointer;text-decoration:none;display:inline-block}
+.subpanel button:hover{border-color:var(--accent)}
 .btn{display:inline-block;background:var(--accent);color:var(--onaccent);font-weight:700;padding:13px 24px;border-radius:6px;text-decoration:none;border:0;cursor:pointer;font:700 1rem "DM Sans",sans-serif}
 .btn:hover{filter:brightness(1.08)}
 .btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
@@ -118,8 +124,18 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <body>
 <header><div class="wrap bar">
   <a class="logo" href="#top">COACH <b>EMILIANO MASSARELLI</b></a>
-  <nav><a href="#jugadas">Jugadas</a><a href="#playbooks">Playbooks</a><a href="#analisis">Análisis</a><a href="#videos">Vídeos</a><a href="#programas">Programas</a><a href="#sobre-mi">Sobre mí</a><a class="btn" href="#contacto" style="padding:9px 18px">Únete</a></nav>
-</div></header>
+  <nav id="mainnav">
+   <button class="nlink" data-m="jugadas">Jugadas</button>
+   <button class="nlink" data-m="playbooks">Playbooks</button>
+   <button class="nlink" data-m="analisis">Análisis</button>
+   <button class="nlink" data-m="videos">Vídeos</button>
+   <button class="nlink" data-m="programas">Programas</button>
+   <a href="#sobre-mi">Sobre mí</a>
+   <a class="btn" href="#contacto" style="padding:9px 18px">Únete</a>
+  </nav>
+</div>
+<div class="subpanel" id="subpanel"><div class="wrap row" id="subrow"></div></div>
+</header>
 
 <main id="top">
 <div class="wrap hero">
@@ -155,6 +171,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <section id="videos"><div class="wrap">
   <h2>Vídeos</h2>
   <p class="lead">Una parte es gratuita para que conozcas mi forma de entrenar. El resto está dentro de los programas.</p>
+  <div class="tabs" id="vf" role="group" aria-label="Filtrar vídeos"></div>
   <div class="vids" id="vids"></div>
 </div></section>
 
@@ -162,11 +179,11 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   <h2>Programas</h2>
   <p class="lead">Elige cómo quieres aprender. Acceso inmediato y actualizaciones incluidas.</p>
   <div class="tiers">
-    <div class="tier"><h3>Pack de jugadas</h3><div class="price">19 €<small> pago único</small></div>
+    <div class="tier" id="tier-pack"><h3>Pack de jugadas</h3><div class="price">19 €<small> pago único</small></div>
       <ul><li>20 jugadas con diagrama animado</li><li>PDF imprimible para tu pizarra</li><li>Explicación de cada opción</li></ul><a class="btn ghost" href="#contacto">Quiero el pack</a></div>
-    <div class="tier hot"><h3>Curso completo</h3><div class="price">79 €<small> pago único</small></div>
+    <div class="tier hot" id="tier-curso"><h3>Curso completo</h3><div class="price">79 €<small> pago único</small></div>
       <ul><li>Más de 8 horas de vídeo</li><li>Ataque, defensa y fundamentos</li><li>Planificación de temporada</li><li>Plantillas de entrenamiento</li></ul><a class="btn" href="#contacto">Quiero el curso</a></div>
-    <div class="tier"><h3>Membresía</h3><div class="price">12 €<small> / mes</small></div>
+    <div class="tier" id="tier-membresia"><h3>Membresía</h3><div class="price">12 €<small> / mes</small></div>
       <ul><li>Contenido nuevo cada semana</li><li>Análisis de partidos</li><li>Comunidad privada de entrenadores</li></ul><a class="btn ghost" href="#contacto">Unirme</a></div>
   </div>
 </div></section>
@@ -264,11 +281,14 @@ filt(document.getElementById("jf"),[{key:"t",opts:["Todas","Ofensiva","Defensiva
  });
 });
 
-document.getElementById("vids").innerHTML=VIDEOS.map(function(v){
- if(v.file)return '<div class="vid"><video controls playsinline preload="metadata"'+(v.poster?' poster="'+v.poster+'"':'')+' src="'+v.file+'" style="width:100%;aspect-ratio:16/9;background:#000;display:block"></video><div class="tx"><h3>'+v.t+'</h3><p>'+v.d+'</p></div></div>';
- var l=v.yt?'href="https://www.youtube.com/watch?v='+v.yt+'" target="_blank" rel="noopener"':'href="#contacto"';
- return '<a class="vid" '+l+'><div class="thumb"><span class="tag'+(v.tag=="Gratis"?'':' pro')+'">'+v.tag+'</span><svg class="bg" viewBox="0 0 320 180"><circle cx="160" cy="90" r="50" fill="none" stroke="#FFF4E0" stroke-width="3"/><path d="M160 40V140M110 90H210" stroke="#FFF4E0" stroke-width="3"/></svg><span class="play"></span></div><div class="tx"><h3>'+v.t+'</h3><p>'+v.d+'</p></div></a>';
-}).join("");
+filt(document.getElementById("vf"),[{key:"acc",opts:["Todos","Gratis","Programa"]}],function(st){
+ var l=VIDEOS.filter(function(v){return st.acc=="Todos"||v.tag==st.acc});
+ document.getElementById("vids").innerHTML=l.length?l.map(function(v){
+  if(v.file)return '<div class="vid"><video controls playsinline preload="metadata"'+(v.poster?' poster="'+v.poster+'"':'')+' src="'+v.file+'" style="width:100%;aspect-ratio:16/9;background:#000;display:block"></video><div class="tx"><h3>'+v.t+'</h3><p>'+v.d+'</p></div></div>';
+  var lk=v.yt?'href="https://www.youtube.com/watch?v='+v.yt+'" target="_blank" rel="noopener"':'href="#contacto"';
+  return '<a class="vid" '+lk+'><div class="thumb"><span class="tag'+(v.tag=="Gratis"?'':' pro')+'">'+v.tag+'</span><svg class="bg" viewBox="0 0 320 180"><circle cx="160" cy="90" r="50" fill="none" stroke="#FFF4E0" stroke-width="3"/><path d="M160 40V140M110 90H210" stroke="#FFF4E0" stroke-width="3"/></svg><span class="play"></span></div><div class="tx"><h3>'+v.t+'</h3><p>'+v.d+'</p></div></a>';
+ }).join(""):'<p style="color:var(--muted)">No hay vídeos con este filtro.</p>';
+});
 
 function sd(x){return x=="Ambas"?"Ataque y defensa":x}
 function lnk(u){return u?'href="'+u+'" target="_blank" rel="noopener"':'href="#contacto"'}
@@ -309,6 +329,41 @@ document.getElementById("f").onsubmit=function(e){
  // Sustituye este correo por el tuyo, o conecta un servicio de emails (Mailchimp, ConvertKit...)
  location.href="mailto:emimassarelli05@gmail.com?subject="+encodeURIComponent("Quiero mi jugada gratis")+"&body="+encodeURIComponent("Nombre: "+f.n.value+"\nCorreo: "+f.e.value);
 };
+
+var NAVSUB={
+ jugadas:{sec:"jugadas",bar:"jf",items:["Todas","Ofensiva","Defensiva"]},
+ playbooks:{sec:"playbooks",bar:"pbf",items:["Todos","Gratis","Premium"]},
+ analisis:{sec:"analisis",bar:"anf",items:["Todos","Gratis","Premium"]},
+ videos:{sec:"videos",bar:"vf",items:["Todos","Gratis","Programa"]},
+ programas:{sec:"programas",items:[["Pack de jugadas","tier-pack"],["Curso completo","tier-curso"],["Membresía","tier-membresia"]]}
+};
+var subEl=document.getElementById("subpanel"),rowEl=document.getElementById("subrow"),curKey=null;
+function closeSub(){subEl.classList.remove("open");curKey=null;[].forEach.call(document.querySelectorAll("#mainnav .nlink"),function(b){b.setAttribute("aria-expanded","false")})}
+function openSub(key,btn){
+ var cfg=NAVSUB[key];
+ if(cfg.bar){
+  rowEl.innerHTML=cfg.items.map(function(t){return '<button type="button">'+t+'</button>'}).join("");
+  [].forEach.call(rowEl.children,function(b){b.onclick=function(){
+   var bar=document.getElementById(cfg.bar),m=[].filter.call(bar.querySelectorAll("button"),function(x){return x.textContent==b.textContent})[0];
+   if(m)m.click();
+   closeSub();
+  };});
+ }else{
+  rowEl.innerHTML=cfg.items.map(function(p){return '<a href="#'+p[1]+'">'+p[0]+'</a>'}).join("");
+  [].forEach.call(rowEl.children,function(a){a.onclick=function(){closeSub()};});
+ }
+ subEl.classList.add("open");curKey=key;
+ [].forEach.call(document.querySelectorAll("#mainnav .nlink"),function(b){b.setAttribute("aria-expanded",b===btn?"true":"false")});
+}
+[].forEach.call(document.querySelectorAll("#mainnav .nlink"),function(b){
+ b.onclick=function(){
+  var key=b.dataset.m;
+  location.hash=NAVSUB[key].sec;
+  if(curKey===key)closeSub();else openSub(key,b);
+ };
+});
+document.addEventListener("click",function(e){if(!e.target.closest("#mainnav")&&!e.target.closest("#subpanel"))closeSub()});
+document.addEventListener("keydown",function(e){if(e.key=="Escape")closeSub()});
 }
 </script>
 <script>
