@@ -157,19 +157,6 @@
    "cta": "Quiero el pack",
    "hot": "No",
    "url": ""
-  },
-  {
-   "t": "Membresía",
-   "price": "12 €",
-   "unit": "/ mes",
-   "items": [
-    "Contenido nuevo cada semana",
-    "Análisis de partidos",
-    "Comunidad privada de entrenadores"
-   ],
-   "cta": "Unirme",
-   "hot": "No",
-   "url": ""
   }
  ]
 }
