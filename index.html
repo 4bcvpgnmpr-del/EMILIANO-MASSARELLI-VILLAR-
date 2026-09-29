@@ -138,7 +138,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 </header>
 
 <main id="top">
-<div class="wrap hero">
+<div class="wrap hero" id="hero">
   <div>
     <h1>Aprende a ver el juego como un entrenador.</h1>
     <p>Sistemas ofensivos, defensa y fundamentos explicados con vídeo y pizarra táctica. Contenido de cancha, sin relleno.</p>
@@ -330,6 +330,27 @@ document.getElementById("f").onsubmit=function(e){
  location.href="mailto:emimassarelli05@gmail.com?subject="+encodeURIComponent("Quiero mi jugada gratis")+"&body="+encodeURIComponent("Nombre: "+f.n.value+"\nCorreo: "+f.e.value);
 };
 
+var SECS=["jugadas","playbooks","analisis","videos","programas","sobre-mi","galeria","contacto"];
+var hasGaleria=GALERIA.length>0;
+function hideAllExcept(key){
+ var h=document.getElementById("hero");if(h)h.hidden=true;
+ SECS.forEach(function(id){var el=document.getElementById(id);if(el)el.hidden=(id!==key)});
+ closeSub();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function showHome(){
+ var h=document.getElementById("hero");if(h)h.hidden=false;
+ SECS.forEach(function(id){var el=document.getElementById(id);if(!el)return;el.hidden=(id==="galeria"?!hasGaleria:false)});
+ closeSub();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.addEventListener("click",function(e){
+ var a=e.target.closest('a[href^="#"]');if(!a)return;
+ var id=a.getAttribute("href").slice(1);
+ if(id==="top"){e.preventDefault();showHome();}
+ else if(SECS.indexOf(id)!==-1){e.preventDefault();hideAllExcept(id);}
+});
+
 var NAVSUB={
  jugadas:{sec:"jugadas",bar:"jf",items:["Todas","Ofensiva","Defensiva"]},
  playbooks:{sec:"playbooks",bar:"pbf",items:["Todos","Gratis","Premium"]},
@@ -357,9 +378,9 @@ function openSub(key,btn){
 }
 [].forEach.call(document.querySelectorAll("#mainnav .nlink"),function(b){
  b.onclick=function(){
-  var key=b.dataset.m;
-  location.hash=NAVSUB[key].sec;
-  if(curKey===key)closeSub();else openSub(key,b);
+  var key=b.dataset.m,wasOpen=(curKey===key);
+  hideAllExcept(NAVSUB[key].sec);
+  if(!wasOpen)openSub(key,b);
  };
 });
 document.addEventListener("click",function(e){if(!e.target.closest("#mainnav")&&!e.target.closest("#subpanel"))closeSub()});
