@@ -122,18 +122,14 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <p>Sistemas ofensivos, defensa y fundamentos explicados con vídeo y pizarra táctica. Contenido de cancha, sin relleno.</p>
     <div class="cta"><a class="btn" href="#jugadas">Ver jugadas</a><a class="btn ghost" href="#programas">Ver programas</a></div>
   </div>
-  <div class="board" id="heroBoard" aria-label="Diagrama animado de una jugada"></div>
+  <div class="board" aria-hidden="true"><svg viewBox="0 0 500 460" style="width:100%;height:auto;display:block"><rect class="key" x="170" y="20" width="160" height="180"/><g class="court"><rect x="10" y="20" width="480" height="430"/><rect x="170" y="20" width="160" height="180"/><path d="M190 200A60 60 0 0 0 310 200"/><path d="M40 20V130A221 221 0 0 0 460 130V20"/><path d="M215 45H285"/><circle cx="250" cy="55" r="9" style="stroke:#E8590C;fill:none;stroke-width:3"/></g></svg></div>
 </div>
 
 <section id="jugadas" style="background:var(--panel);border-block:1px solid var(--line)"><div class="wrap">
-  <h2>Pizarra de jugadas</h2>
-  <p class="lead">Elige una jugada y mira cómo se desarrolla paso a paso. Los círculos son los jugadores, la línea continua es el movimiento, la discontinua el pase y el trazo grueso el bloqueo. En las jugadas defensivas, los círculos oscuros con X son los defensores.</p>
-  <div class="tabs" id="pf" role="group" aria-label="Filtrar jugadas" style="margin-bottom:0"></div>
-  <div class="tabs" id="tabs" role="group" aria-label="Elegir jugada"></div>
-  <div class="plays">
-    <div class="board" id="mainBoard"></div>
-    <div class="info" id="info" aria-live="polite"></div>
-  </div>
+  <h2>Jugadas</h2>
+  <p class="lead">Jugadas grabadas y animadas, tal como las diseño, para ver el movimiento real paso a paso.</p>
+  <div class="tabs" id="jf" role="group" aria-label="Filtrar jugadas"></div>
+  <div class="vids" id="jugs"></div>
 </div></section>
 
 <section id="playbooks"><div class="wrap">
@@ -190,13 +186,14 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 </div></div></section>
 </main>
 
-<footer><div class="wrap"><span>© 2026 Emiliano Massarelli Villar</span><span><a href="#">Instagram</a> · <a href="#">YouTube</a> · <a href="#">Aviso legal</a></span></div></footer>
+<footer><div class="wrap"><span>© 2026 Emiliano Massarelli Villar</span><span><a href="#">Instagram</a> · <a href="#">YouTube</a> · <a href="#">Aviso legal</a> · <a href="admin.html">Acceso entrenador</a></span></div></footer>
 
 <script>
+function main(){
 // ===== CONFIGURACIÓN: edita solo esta parte =====
 // hg = enlace para compartir de tu jugada en The Hoops Geek (Compartir > Copiar enlace)
 // yt = ID del vídeo de YouTube (lo que va después de v= en la URL)
-var HG={pnr:"",horns:"",back:"",zona:"",ayuda:"",ice:""};
+var JUGADAS=[]; // cada jugada: {t,d,tipo:"Ofensiva"|"Defensiva",tag:"Gratis"|"Programa",yt:"",file:"",poster:"",hg:""}
 var VIDEOS=[
  {t:"Los 5 fundamentos del tiro",d:"Posición, mecánica y lectura de la defensa. 12 min.",tag:"Gratis",yt:"",file:"",poster:""},
  {t:"Cómo leer un bloqueo directo",d:"Las cuatro defensas posibles y cómo atacar cada una. 18 min.",tag:"Gratis",yt:"",file:"",poster:""},
@@ -224,64 +221,21 @@ var FOTO="";   // ejemplo: "images/foto.jpg"
 var GALERIA=[]; // ejemplo: [{src:"images/entreno1.jpg",t:"Sesión de tiro"},{src:"images/equipo.jpg",t:""}]
 // En VIDEOS puedes usar yt (YouTube) o file (vídeo en la carpeta videos, ej: "videos/tiro.mp4"), y poster (imagen de portada, ej: "images/portada-tiro.jpg")
 // ================================================
-// Jugadas: p = jugadores [n,x,y]; m = movimiento, s = pase, b = bloqueo (x1,y1,x2,y2)
-var PLAYS=[
-{id:"pnr",name:"Bloqueo directo",lvl:"Todos los niveles",tipo:"Ofensiva",
- pts:["El 5 sale a poner el bloqueo sobre el defensor del 1.","El 1 espera al bloqueo y ataca hacia el lado del 5.","El 5 hace el corte hacia el aro; el 1 decide entre pasar o tirar.","2 y 3 abren el campo en las esquinas para castigar las ayudas."],
- p:[[1,250,390],[5,275,290],[2,60,120],[3,440,120],[4,120,290]],
- b:[[262,300,300,285]],m:["M250 390Q330 350 335 230","M290 290Q320 190 258 100"],s:["M335 230L440 130"]},
-{id:"horns",name:"Horns",lvl:"Intermedio",tipo:"Ofensiva",
- pts:["4 y 5 se colocan en los codos de la zona.","El 1 sube el balón y elige lado con el bloqueo de uno de los pívots.","El otro pívot hace pop o corte al aro según cómo defienda su par.","2 y 3 se mueven en la esquina para dar la opción de tiro exterior."],
- p:[[1,250,390],[4,185,215],[5,315,215],[2,60,130],[3,440,130]],
- b:[[300,225,330,205]],m:["M250 390L250 300Q320 270 380 200","M185 215Q160 150 235 90"],s:["M250 300L315 215"]},
-{id:"back",name:"Corte a la espalda",lvl:"Fácil",tipo:"Ofensiva",
- pts:["El 3 se ofrece en el ala para atraer al defensor.","El 1 pasa al ala y el 3 finge recibir.","Si su defensor sobreapoya, el 3 corta a la espalda al aro.","El 1 pasa de nuevo y el 3 finaliza."],
- p:[[1,250,390],[3,410,250],[2,90,250],[4,160,150],[5,340,150]],
- b:[],m:["M410 250Q450 130 300 70"],s:["M250 390L410 250","M410 250L300 70"]},
-{id:"zona",name:"Zona 2-3",lvl:"Todos los niveles",tipo:"Defensiva",
- pts:["Los dos defensores de arriba cubren el balón y el pase al centro.","El balón va al ala: el defensor de ese lado sale a presionar.","El de arriba del lado contrario cierra el centro y la zona se desplaza hacia el balón.","El interior baja a proteger el aro y el ala contraria se cierra para ayudar en el rebote."],
- p:[[1,250,340],[2,410,270],[3,90,270],[4,340,170],[5,165,170]],
- q:[["X1",190,235],["X2",310,235],["X3",120,115],["X4",250,125],["X5",380,115]],
- b:[],m:["M310 235Q370 255 395 250","M190 235L245 215","M250 125Q290 125 320 135"],s:["M250 340L410 270"]},
-{id:"ayuda",name:"Ayuda y recuperación",lvl:"Intermedio",tipo:"Defensiva",
- pts:["El 1 penetra hacia el aro y su defensor lo persigue.","El defensor del lado débil deja a su par y llega a ayudar antes de que el rival se acerque al aro.","Si el balón sale al jugador que dejó, el ayudante recupera con un cierre controlado.","Los demás defensores ajustan su posición para cubrir el pase."],
- p:[[1,250,345],[2,80,265],[3,420,265],[4,150,140],[5,350,140]],
- q:[["X1",250,315],["X2",100,240],["X3",400,240],["X4",170,115],["X5",350,112]],
- b:[],m:["M250 345Q330 300 318 200","M250 315Q320 285 312 215","M350 112L330 170","M330 170Q352 150 350 118"],s:["M318 200L346 148"]},
-{id:"ice",name:"Defensa del bloqueo directo (Ice)",lvl:"Avanzado",tipo:"Defensiva",
- pts:["El defensor del balón se coloca de lado para impedir que use el bloqueo.","El balón es forzado hacia la línea de banda, lejos del bloqueo.","El pívot defensor baja a proteger la zona y evita el pase o la penetración.","Cuando el balón llega a la banda, se cierra el ángulo y los demás defensores vigilan las ayudas."],
- p:[[1,250,365],[5,305,295],[2,60,135],[3,440,135],[4,130,290]],
- q:[["X1",250,335],["X5",290,262],["X2",85,110],["X3",415,110],["X4",150,265]],
- b:[[288,318,325,300]],m:["M250 365Q190 330 110 250","M250 335Q205 305 135 245","M290 262L262 205","M305 295Q290 250 265 210"],s:[]}
-];
-var SVGNS="http://www.w3.org/2000/svg";
-function boardSVG(pl){
- var d=0,o='<svg viewBox="0 0 500 460" role="img" aria-label="Pizarra: '+pl.name+'"><defs><marker id="ah'+pl.id+Math.random().toString(36).slice(2,5)+'"></marker></defs>';
- o+='<rect class="key" x="170" y="20" width="160" height="180"/><g class="court"><rect x="10" y="20" width="480" height="430"/><rect x="170" y="20" width="160" height="180"/><path d="M190 200A60 60 0 0 0 310 200"/><path d="M40 20V130A221 221 0 0 0 460 130V20"/><path d="M215 45H285"/><circle cx="250" cy="55" r="9" style="stroke:#E8590C"/></g>';
- pl.m.forEach(function(x){o+='<path class="mv" pathLength="1" style="animation-delay:'+(d+=.9)+'s" d="'+x+'"/>'});
- pl.s.forEach(function(x){o+='<path class="ps" style="animation-delay:'+(d+=.8)+'s" d="'+x+'"/>'});
- pl.b.forEach(function(x){o+='<line class="sc" style="animation-delay:.3s" x1="'+x[0]+'" y1="'+x[1]+'" x2="'+x[2]+'" y2="'+x[3]+'"/>'});
- if(pl.q){o+='<g class="df">';pl.q.forEach(function(q){o+='<circle cx="'+q[1]+'" cy="'+q[2]+'" r="17"/><text x="'+q[1]+'" y="'+(q[2]+5)+'">'+q[0]+'</text>'});o+='</g>'}
- o+='<g class="pl">';pl.p.forEach(function(q){o+='<circle cx="'+q[1]+'" cy="'+q[2]+'" r="17"/><text x="'+q[1]+'" y="'+(q[2]+6)+'">'+q[0]+'</text>'});
- return o+'</g></svg>';
+// Si existe content.json (lo edita el panel admin.html), sus datos sustituyen a los de arriba
+var C=window.CONTENT||{};FOTO=C.FOTO||FOTO;GALERIA=C.GALERIA||GALERIA;JUGADAS=C.JUGADAS||JUGADAS;VIDEOS=C.VIDEOS||VIDEOS;PLAYBOOKS=C.PLAYBOOKS||PLAYBOOKS;ANALISIS=C.ANALISIS||ANALISIS;
+
+function medTag(v){return v.tag=="Gratis"?"":" pro"}
+function medThumb(v,ph){
+ if(v.file)return '<video controls playsinline preload="metadata"'+(v.poster?' poster="'+v.poster+'"':'')+' src="'+v.file+'" style="width:100%;aspect-ratio:16/9;background:#000;display:block"></video>';
+ var l=v.yt?'href="https://www.youtube.com/watch?v='+v.yt+'" target="_blank" rel="noopener"':(v.hg?'href="'+v.hg+'" target="_blank" rel="noopener"':'href="#contacto"');
+ return '<a '+l+'><div class="thumb"><span class="tag'+medTag(v)+'">'+v.tag+'</span>'+(ph||'')+'<span class="play"></span></div></a>';
 }
-var tabs=document.getElementById("tabs"),main=document.getElementById("mainBoard"),info=document.getElementById("info");
-function show(i){
- var pl=PLAYS[i];main.innerHTML=boardSVG(pl);
- info.innerHTML='<h3>'+pl.name+'</h3><div class="meta"><span class="chip">'+pl.tipo+'</span><span class="chip">'+pl.lvl+'</span></div><ul>'+pl.pts.map(function(t){return"<li>"+t+"</li>"}).join("")+'</ul>'+(HG[pl.id]?'<a class="btn" target="_blank" rel="noopener" href="'+HG[pl.id]+'">Ver animación en The Hoops Geek</a>':'<a class="btn" href="#contacto">Ver el vídeo de esta jugada</a>');
- [].forEach.call(tabs.children,function(b){b.setAttribute("aria-pressed",b.dataset.i==i)});
-}
-function buildTabs(f){
- tabs.innerHTML="";var first=-1;
- PLAYS.forEach(function(pl,i){
-  if(f!="Todas"&&pl.tipo!=f)return;
-  if(first<0)first=i;
-  var b=document.createElement("button");b.className="tab";b.textContent=pl.name;b.dataset.i=i;b.onclick=function(){show(i)};tabs.appendChild(b);
- });
- return first;
-}
-filt(document.getElementById("pf"),[{key:"t",opts:["Todas","Ofensiva","Defensiva"]}],function(st){show(buildTabs(st.t))});
-document.getElementById("heroBoard").innerHTML=boardSVG(PLAYS[0]);
+filt(document.getElementById("jf"),[{key:"t",opts:["Todas","Ofensiva","Defensiva"]}],function(st){
+ var l=JUGADAS.filter(function(j){return st.t=="Todas"||j.tipo==st.t});
+ document.getElementById("jugs").innerHTML=l.length?l.map(function(j){
+  return '<div class="vid">'+medThumb(j,'<svg class="bg" viewBox="0 0 320 180"><circle cx="160" cy="90" r="50" fill="none" stroke="#FFF4E0" stroke-width="3"/><path d="M160 40V140M110 90H210" stroke="#FFF4E0" stroke-width="3"/></svg>')+'<div class="tx"><h3>'+j.t+'</h3><p>'+(j.d||"")+'</p></div></div>';
+ }).join(""):'<p style="color:var(--muted)">Todavía no has subido ninguna jugada. Súbelas desde tu panel.</p>';
+});
 
 document.getElementById("vids").innerHTML=VIDEOS.map(function(v){
  if(v.file)return '<div class="vid"><video controls playsinline preload="metadata"'+(v.poster?' poster="'+v.poster+'"':'')+' src="'+v.file+'" style="width:100%;aspect-ratio:16/9;background:#000;display:block"></video><div class="tx"><h3>'+v.t+'</h3><p>'+v.d+'</p></div></div>';
@@ -323,12 +277,15 @@ if(GALERIA.length){
  document.getElementById("gal").innerHTML=GALERIA.map(function(g){return '<figure><img loading="lazy" src="'+g.src+'" alt="'+(g.t||"Foto de entrenamiento")+'">'+(g.t?'<figcaption>'+g.t+'</figcaption>':'')+'</figure>'}).join("");
  var nv=document.querySelector("nav"),na=document.createElement("a");na.href="#galeria";na.textContent="Galería";nv.insertBefore(na,nv.querySelector('a[href="#sobre-mi"]'));
 }
-show(0);
 document.getElementById("f").onsubmit=function(e){
  e.preventDefault();var f=e.target;
  // Sustituye este correo por el tuyo, o conecta un servicio de emails (Mailchimp, ConvertKit...)
  location.href="mailto:emimassarelli05@gmail.com?subject="+encodeURIComponent("Quiero mi jugada gratis")+"&body="+encodeURIComponent("Nombre: "+f.n.value+"\nCorreo: "+f.e.value);
 };
+}
+</script>
+<script>
+fetch("content.json?t="+Date.now()).then(function(r){return r.ok?r.json():null}).catch(function(){return null}).then(function(c){window.CONTENT=c;main()});
 </script>
 </body>
 </html>
