@@ -51,13 +51,14 @@ nav button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-col
 </div>
 <script>
 var S={
+ PROGRAMAS:{n:"Programas",f:[["t","Título del plan"],["price","Precio (ej: 19 €)"],["unit","Debajo del precio (ej: pago único, / mes)"],["items","Qué incluye (una línea por punto)","textarea"],["cta","Texto del botón (ej: Quiero el pack)"],["hot","Destacarlo como el más recomendado",["No","Sí"]],["url","Enlace de pago (opcional; si lo dejas vacío, lleva al formulario de contacto)"]]},
  JUGADAS:{n:"Jugadas",f:[["t","Título"],["d","Descripción o pasos, breve"],["tipo","Enfoque",["Ofensiva","Defensiva"]],["tag","Acceso",["Gratis","Programa"]],["yt","ID de YouTube (déjalo vacío si subes archivo o pones enlace)"],["hg","Enlace en The Hoops Geek (opcional)"]],file:"file",acc:"video/*",fl:"Vídeo desde tu ordenador (opcional)"},
  VIDEOS:{n:"Vídeos",f:[["t","Título"],["d","Descripción"],["tag","Acceso",["Gratis","Programa"]],["yt","ID de YouTube (déjalo vacío si subes un archivo)"]],file:"file",acc:"video/*",fl:"Vídeo desde tu ordenador (opcional)"},
  PLAYBOOKS:{n:"Playbooks",f:[["t","Título"],["d","Descripción"],["n","Número de jugadas","number"],["tag","Acceso",["Gratis","Premium"]],["s","Enfoque",["Ofensiva","Defensiva","Ambas"]],["hg","Enlace del playbook en The Hoops Geek"]]},
  ANALISIS:{n:"Análisis",f:[["t","Título"],["d","Descripción"],["k","Tipo",["Vídeo","Informe","Artículo"]],["tag","Acceso",["Gratis","Premium"]],["s","Enfoque",["Ofensiva","Defensiva","Ambas"]],["url","Enlace (YouTube, artículo...) o sube un archivo abajo"]],file:"url",acc:"*",fl:"Archivo (PDF, vídeo...) (opcional)"},
  GALERIA:{n:"Galería",f:[["t","Pie de foto (opcional)"]],file:"src",acc:"image/*",fl:"Imagen",req:1}
 };
-var C={},cur="JUGADAS",$=function(i){return document.getElementById(i)};
+var C={},cur="JUGADAS",editIdx=null,$=function(i){return document.getElementById(i)};
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k)||"";if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return ""}}
 function say(t){var m=$("msg");m.textContent=t;m.style.display=t?"block":"none"}
 function gh(p,m,b){return fetch("https://api.github.com/repos/"+ls("repo")+"/contents/"+p+(m?"":"?t="+Date.now()),{method:m||"GET",headers:{Authorization:"Bearer "+ls("tok"),Accept:"application/vnd.github+json"},body:b?JSON.stringify(b):undefined})}
@@ -84,7 +85,7 @@ function nav(){
  var n=$("nav");n.innerHTML="";
  Object.keys(S).concat(["FOTO"]).forEach(function(k){
   var b=document.createElement("button");b.className="g";b.textContent=S[k]?S[k].n:"Mi foto";
-  b.setAttribute("aria-pressed",k==cur);b.onclick=function(){cur=k;nav();view(k);say("")};n.appendChild(b);
+  b.setAttribute("aria-pressed",k==cur);b.onclick=function(){cur=k;editIdx=null;nav();view(k);say("")};n.appendChild(b);
  });
 }
 function view(k){
@@ -95,26 +96,31 @@ function view(k){
   return;
  }
  var s=S[k],L=C[k]||[];
- var h="<h2>"+s.n+"</h2>"+(L.length?L.map(function(it,i){return '<div class="it"><span>'+esc(it.t||it.src||"(sin título)")+'</span><button class="g s" data-i="'+i+'">Borrar</button></div>'}).join(""):"<p>Todavía no hay nada aquí.</p>");
- h+='<h2 style="margin-top:24px">Añadir</h2>';
+ var h="<h2>"+s.n+"</h2>"+(L.length?L.map(function(it,i){return '<div class="it"><span>'+esc(it.t||it.src||"(sin título)")+'</span><span style="display:flex;gap:6px"><button class="g s" data-e="'+i+'">Editar</button><button class="g s" data-i="'+i+'">Borrar</button></span></div>'}).join(""):"<p>Todavía no hay nada aquí.</p>");
+ var editing=editIdx!=null,it0=editing?L[editIdx]:null;
+ h+='<h2 style="margin-top:24px">'+(editing?"Editar":"Añadir")+'</h2>';
  s.f.forEach(function(x,i){
-  h+='<label for="f'+i+'">'+x[1]+'</label>'+(Array.isArray(x[2])?'<select id="f'+i+'">'+x[2].map(function(o){return"<option>"+o+"</option>"}).join("")+"</select>":'<input id="f'+i+'" type="'+(x[2]||"text")+'">');
+  var val=it0?(x[2]=="textarea"?(it0[x[0]]||[]).join("\n"):(it0[x[0]]==null?"":it0[x[0]])):"";
+  h+='<label for="f'+i+'">'+x[1]+'</label>'+(Array.isArray(x[2])?'<select id="f'+i+'">'+x[2].map(function(o){return'<option'+(o==val?" selected":"")+'>'+o+"</option>"}).join("")+"</select>":x[2]=="textarea"?'<textarea id="f'+i+'" rows="4" style="width:100%;padding:11px 12px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit">'+esc(val)+'</textarea>':'<input id="f'+i+'" type="'+(x[2]||"text")+'" value="'+esc(val)+'">');
  });
- if(s.file)h+='<label for="ff">'+s.fl+'</label><input id="ff" type="file" accept="'+s.acc+'">';
- h+='<button id="ad">Añadir a la web</button>';
+ if(s.file)h+='<label for="ff">'+s.fl+(editing?" (déjalo vacío para mantener el actual)":"")+'</label><input id="ff" type="file" accept="'+s.acc+'">';
+ h+='<button id="ad">'+(editing?"Guardar cambios":"Añadir a la web")+'</button>'+(editing?' <button class="g" id="cnc" type="button">Cancelar</button>':"");
  v.innerHTML=h;
  [].forEach.call(v.querySelectorAll("button[data-i]"),function(b){b.onclick=function(){
   if(!confirm("¿Borrar este elemento de la web?"))return;
-  C[k].splice(+b.dataset.i,1);run("Borrando...",function(){return save("Borrar de "+s.n)},k);
+  C[k].splice(+b.dataset.i,1);if(editIdx==+b.dataset.i)editIdx=null;run("Borrando...",function(){return save("Borrar de "+s.n)},k);
  }});
+ [].forEach.call(v.querySelectorAll("button[data-e]"),function(b){b.onclick=function(){editIdx=+b.dataset.e;view(k);say("")}});
+ if($("cnc"))$("cnc").onclick=function(){editIdx=null;view(k);say("")};
  $("ad").onclick=async function(){
-  var it={};s.f.forEach(function(x,i){var val=$("f"+i).value.trim();it[x[0]]=x[2]=="number"?(+val||0):val});
+  var it={};s.f.forEach(function(x,i){var val=$("f"+i).value.trim();it[x[0]]=x[2]=="number"?(+val||0):x[2]=="textarea"?val.split("\n").map(function(t){return t.trim()}).filter(Boolean):val});
   var fi=$("ff"),f=fi&&fi.files[0];
-  if(s.req&&!f){say("Elige una imagen.");return}
+  if(s.req&&!f&&!editing){say("Elige una imagen.");return}
   if(!s.req&&!it.t){say("Escribe un título.");return}
-  await run("Subiendo... los vídeos grandes pueden tardar unos minutos. No cierres esta página.",async function(){
-   if(f)it[s.file]=await upload(f);
-   (C[k]=C[k]||[]).push(it);await save("Añadir a "+s.n);
+  await run("Subiendo... los archivos grandes pueden tardar unos minutos. No cierres esta página.",async function(){
+   if(f)it[s.file]=await upload(f);else if(editing&&s.file)it[s.file]=it0[s.file];
+   if(editing){C[k][editIdx]=it;editIdx=null}else{(C[k]=C[k]||[]).push(it)}
+   await save((editing?"Editar en ":"Añadir a ")+s.n);
   },k);
  };
 }
