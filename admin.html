@@ -88,8 +88,14 @@ function nav(){
   b.setAttribute("aria-pressed",k==cur);b.onclick=function(){cur=k;editIdx=null;nav();view(k);say("")};n.appendChild(b);
  });
 }
+var DEF_PROGRAMAS=[
+ {t:"Pack de jugadas",price:"19 €",unit:"pago único",items:["20 jugadas con diagrama animado","PDF imprimible para tu pizarra","Explicación de cada opción"],cta:"Quiero el pack",hot:"No",url:""},
+ {t:"Curso completo",price:"79 €",unit:"pago único",items:["Más de 8 horas de vídeo","Ataque, defensa y fundamentos","Planificación de temporada","Plantillas de entrenamiento"],cta:"Quiero el curso",hot:"Sí",url:""},
+ {t:"Membresía",price:"12 €",unit:"/ mes",items:["Contenido nuevo cada semana","Análisis de partidos","Comunidad privada de entrenadores"],cta:"Unirme",hot:"No",url:""}
+];
 function view(k){
  var v=$("view");
+ if(k=="PROGRAMAS"&&!(C.PROGRAMAS&&C.PROGRAMAS.length))C.PROGRAMAS=JSON.parse(JSON.stringify(DEF_PROGRAMAS));
  if(k=="FOTO"){
   v.innerHTML='<h2>Mi foto</h2><p>Aparece en la sección "Sobre mí".</p><label for="ff">Imagen</label><input id="ff" type="file" accept="image/*"><button id="sv">Subir foto</button>';
   $("sv").onclick=async function(){var f=$("ff").files[0];if(!f){say("Elige una imagen.");return}await run("Subiendo...",async function(){C.FOTO=await upload(f);await save("Cambiar foto")},k)};
