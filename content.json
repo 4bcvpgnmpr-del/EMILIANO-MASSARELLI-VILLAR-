@@ -143,5 +143,33 @@
    "hg": "",
    "file": "videos/4_out_-_high_post_options.mp4"
   }
+ ],
+ "PROGRAMAS": [
+  {
+   "t": "Pack de jugadas",
+   "price": "19 €",
+   "unit": "pago único",
+   "items": [
+    "20 jugadas con diagrama animado",
+    "PDF imprimible para tu pizarra",
+    "Explicación de cada opción"
+   ],
+   "cta": "Quiero el pack",
+   "hot": "No",
+   "url": ""
+  },
+  {
+   "t": "Membresía",
+   "price": "12 €",
+   "unit": "/ mes",
+   "items": [
+    "Contenido nuevo cada semana",
+    "Análisis de partidos",
+    "Comunidad privada de entrenadores"
+   ],
+   "cta": "Unirme",
+   "hot": "No",
+   "url": ""
+  }
  ]
 }
