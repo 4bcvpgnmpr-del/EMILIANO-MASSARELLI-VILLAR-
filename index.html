@@ -191,14 +191,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <section id="programas" style="background:var(--panel);border-block:1px solid var(--line)"><div class="wrap">
   <h2>Programas</h2>
   <p class="lead">Elige cómo quieres aprender. Acceso inmediato y actualizaciones incluidas.</p>
-  <div class="tiers">
-    <div class="tier" id="tier-pack"><h3>Pack de jugadas</h3><div class="price">19 €<small> pago único</small></div>
-      <ul><li>20 jugadas con diagrama animado</li><li>PDF imprimible para tu pizarra</li><li>Explicación de cada opción</li></ul><a class="btn ghost" href="#contacto">Quiero el pack</a></div>
-    <div class="tier hot" id="tier-curso"><h3>Curso completo</h3><div class="price">79 €<small> pago único</small></div>
-      <ul><li>Más de 8 horas de vídeo</li><li>Ataque, defensa y fundamentos</li><li>Planificación de temporada</li><li>Plantillas de entrenamiento</li></ul><a class="btn" href="#contacto">Quiero el curso</a></div>
-    <div class="tier" id="tier-membresia"><h3>Membresía</h3><div class="price">12 €<small> / mes</small></div>
-      <ul><li>Contenido nuevo cada semana</li><li>Análisis de partidos</li><li>Comunidad privada de entrenadores</li></ul><a class="btn ghost" href="#contacto">Unirme</a></div>
-  </div>
+  <div class="tiers" id="tiers"></div>
 </div></section>
 
 <section id="sobre-mi"><div class="wrap about">
@@ -241,6 +234,11 @@ var VIDEOS=[
  {t:"Defensa en zona 2-3 completa",d:"Posiciones, ayudas y rotaciones con análisis de partidos. 45 min.",tag:"Programa",yt:"",file:"",poster:""},
  {t:"Sesión de entrenamiento paso a paso",d:"Calentamiento, ejercicios y juego reducido. 60 min.",tag:"Programa",yt:"",file:"",poster:""}
 ];
+var PROGRAMAS=[
+ {t:"Pack de jugadas",price:"19 €",unit:"pago único",items:["20 jugadas con diagrama animado","PDF imprimible para tu pizarra","Explicación de cada opción"],cta:"Quiero el pack",hot:false,url:""},
+ {t:"Curso completo",price:"79 €",unit:"pago único",items:["Más de 8 horas de vídeo","Ataque, defensa y fundamentos","Planificación de temporada","Plantillas de entrenamiento"],cta:"Quiero el curso",hot:true,url:""},
+ {t:"Membresía",price:"12 €",unit:"/ mes",items:["Contenido nuevo cada semana","Análisis de partidos","Comunidad privada de entrenadores"],cta:"Unirme",hot:false,url:""}
+];
 var PLAYBOOKS=[
  {t:"Ataque contra defensa individual",d:"Bloqueos directos e indirectos, Horns y continuidades para atacar hombre a hombre.",n:12,tag:"Gratis",s:"Ofensiva",hg:""},
  {t:"Ataque contra zona",d:"Cómo mover el balón y ocupar los huecos de las zonas 2-3, 3-2 y 1-3-1.",n:10,tag:"Premium",s:"Ofensiva",hg:""},
@@ -263,7 +261,13 @@ var GALERIA=[]; // ejemplo: [{src:"images/entreno1.jpg",t:"Sesión de tiro"},{sr
 // En VIDEOS puedes usar yt (YouTube) o file (vídeo en la carpeta videos, ej: "videos/tiro.mp4"), y poster (imagen de portada, ej: "images/portada-tiro.jpg")
 // ================================================
 // Si existe content.json (lo edita el panel admin.html), sus datos sustituyen a los de arriba
-var C=window.CONTENT||{};FOTO=C.FOTO||FOTO;GALERIA=C.GALERIA||GALERIA;JUGADAS=C.JUGADAS||JUGADAS;VIDEOS=C.VIDEOS||VIDEOS;PLAYBOOKS=C.PLAYBOOKS||PLAYBOOKS;ANALISIS=C.ANALISIS||ANALISIS;
+var C=window.CONTENT||{};FOTO=C.FOTO||FOTO;GALERIA=C.GALERIA||GALERIA;JUGADAS=C.JUGADAS||JUGADAS;VIDEOS=C.VIDEOS||VIDEOS;PLAYBOOKS=C.PLAYBOOKS||PLAYBOOKS;ANALISIS=C.ANALISIS||ANALISIS;PROGRAMAS=C.PROGRAMAS||PROGRAMAS;
+
+document.getElementById("tiers").innerHTML=PROGRAMAS.map(function(p,i){
+ var hot=p.hot==="Sí"||p.hot===true;
+ var link=p.url?'href="'+p.url+'" target="_blank" rel="noopener"':'href="#contacto"';
+ return '<div class="tier'+(hot?" hot":"")+'" id="tier-'+i+'"><h3>'+p.t+'</h3><div class="price">'+p.price+'<small> '+(p.unit||"")+'</small></div><ul>'+(p.items||[]).map(function(x){return "<li>"+x+"</li>"}).join("")+'</ul><a class="btn'+(hot?"":" ghost")+'" '+link+'>'+(p.cta||"Más información")+'</a></div>';
+}).join("");
 
 function medTag(v){return v.tag=="Gratis"?"":" pro"}
 function medThumb(v,ph){
@@ -369,7 +373,7 @@ var NAVSUB={
  playbooks:{sec:"playbooks",bar:"pbf",items:["Todos","Gratis","Premium"]},
  analisis:{sec:"analisis",bar:"anf",items:["Todos","Gratis","Premium"]},
  videos:{sec:"videos",bar:"vf",items:["Todos","Gratis","Programa"]},
- programas:{sec:"programas",items:[["Pack de jugadas","tier-pack"],["Curso completo","tier-curso"],["Membresía","tier-membresia"]]}
+ programas:{sec:"programas"}
 };
 var subEl=document.getElementById("subpanel"),rowEl=document.getElementById("subrow"),curKey=null;
 function closeSub(){subEl.classList.remove("open");curKey=null;[].forEach.call(document.querySelectorAll("#mainnav .nlink"),function(b){b.setAttribute("aria-expanded","false")})}
@@ -382,8 +386,8 @@ function openSub(key,btn){
    if(m)m.click();
    closeSub();
   };});
- }else{
-  rowEl.innerHTML=cfg.items.map(function(p){return '<a href="#'+p[1]+'">'+p[0]+'</a>'}).join("");
+ }else if(key==="programas"){
+  rowEl.innerHTML=PROGRAMAS.map(function(p,i){return '<a href="#tier-'+i+'">'+p.t+'</a>'}).join("");
   [].forEach.call(rowEl.children,function(a){a.onclick=function(){closeSub()};});
  }
  subEl.classList.add("open");curKey=key;
