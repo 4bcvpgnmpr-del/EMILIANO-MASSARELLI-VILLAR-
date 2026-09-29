@@ -263,7 +263,8 @@ var GALERIA=[]; // ejemplo: [{src:"images/entreno1.jpg",t:"Sesión de tiro"},{sr
 // Si existe content.json (lo edita el panel admin.html), sus datos sustituyen a los de arriba
 var C=window.CONTENT||{};FOTO=C.FOTO||FOTO;GALERIA=C.GALERIA||GALERIA;JUGADAS=C.JUGADAS||JUGADAS;VIDEOS=C.VIDEOS||VIDEOS;PLAYBOOKS=C.PLAYBOOKS||PLAYBOOKS;ANALISIS=C.ANALISIS||ANALISIS;PROGRAMAS=C.PROGRAMAS||PROGRAMAS;
 
-document.getElementById("tiers").innerHTML=PROGRAMAS.map(function(p,i){
+var PROGRAMAS_VIS=PROGRAMAS.filter(function(p){return p.visible!=="No"});
+document.getElementById("tiers").innerHTML=PROGRAMAS_VIS.map(function(p,i){
  var hot=p.hot==="Sí"||p.hot===true;
  var link=p.url?'href="'+p.url+'" target="_blank" rel="noopener"':'href="#contacto"';
  return '<div class="tier'+(hot?" hot":"")+'" id="tier-'+i+'"><h3>'+p.t+'</h3><div class="price">'+p.price+'<small> '+(p.unit||"")+'</small></div><ul>'+(p.items||[]).map(function(x){return "<li>"+x+"</li>"}).join("")+'</ul><a class="btn'+(hot?"":" ghost")+'" '+link+'>'+(p.cta||"Más información")+'</a></div>';
@@ -387,7 +388,7 @@ function openSub(key,btn){
    closeSub();
   };});
  }else if(key==="programas"){
-  rowEl.innerHTML=PROGRAMAS.map(function(p,i){return '<a href="#tier-'+i+'">'+p.t+'</a>'}).join("");
+  rowEl.innerHTML=PROGRAMAS_VIS.map(function(p,i){return '<a href="#tier-'+i+'">'+p.t+'</a>'}).join("");
   [].forEach.call(rowEl.children,function(a){a.onclick=function(){closeSub()};});
  }
  subEl.classList.add("open");curKey=key;
