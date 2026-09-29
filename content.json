@@ -157,6 +157,17 @@
    "cta": "Quiero el pack",
    "hot": "No",
    "url": ""
+  },
+  {
+   "t": "Playbooks",
+   "price": "5",
+   "unit": "Pago Unico",
+   "items": [
+    "5 Playbooks ofensivos y defensivos de equipos de Eurolague"
+   ],
+   "cta": "",
+   "hot": "No",
+   "url": ""
   }
  ]
 }
