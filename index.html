@@ -64,7 +64,7 @@ nav a:hover{color:var(--ink)}
 .meta{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
 .chip{border:1px solid var(--line);padding:4px 12px;border-radius:99px;font-size:.85rem;color:var(--muted)}
 .vids{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:32px}
-.jugs{grid-template-columns:repeat(auto-fill,160px)!important;justify-content:start}
+.jugs{grid-template-columns:repeat(auto-fill,210px)!important;justify-content:start}
 .modal{position:fixed;inset:0;background:rgba(4,8,24,.88);display:none;align-items:center;justify-content:center;z-index:50;padding:44px 16px}
 .modal.open{display:flex}
 .modal .box2{width:100%;max-width:900px;background:#000;border-radius:10px;overflow:hidden}
@@ -251,7 +251,7 @@ filt(document.getElementById("jf"),[{key:"t",opts:["Todas","Ofensiva","Defensiva
  var host=document.getElementById("jugs");
  host.className="vids jugs";
  host.innerHTML=l.length?l.map(function(j){
-  var img=j.yt?'<img src="https://i.ytimg.com/vi/'+j.yt+'/hqdefault.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">':(j.poster?'<img src="'+j.poster+'" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">':'<svg class="bg" viewBox="0 0 320 180"><circle cx="160" cy="90" r="50" fill="none" stroke="#FFF4E0" stroke-width="3"/><path d="M160 40V140M110 90H210" stroke="#FFF4E0" stroke-width="3"/></svg>');
+  var img=j.yt?'<img src="https://i.ytimg.com/vi/'+j.yt+'/hqdefault.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">':(j.poster?'<img src="'+j.poster+'" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">':(j.file?'<video muted playsinline preload="metadata" src="'+j.file+'#t=0.1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none"></video>':'<svg class="bg" viewBox="0 0 320 180"><circle cx="160" cy="90" r="50" fill="none" stroke="#FFF4E0" stroke-width="3"/><path d="M160 40V140M110 90H210" stroke="#FFF4E0" stroke-width="3"/></svg>'));
   return '<div class="vid"><div class="thumb j-thumb" style="position:relative;cursor:pointer"><span class="tag'+medTag(j)+'">'+j.tag+'</span>'+img+'<span class="play"></span></div><div class="tx"><h3>'+j.t+'</h3><p>'+(j.d||"")+'</p></div></div>';
  }).join(""):'<p style="color:var(--muted)">Todavía no has subido ninguna jugada. Súbelas desde tu panel.</p>';
  [].forEach.call(host.querySelectorAll(".j-thumb"),function(el,i){
