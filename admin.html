@@ -51,7 +51,7 @@ nav button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-col
 </div>
 <script>
 var S={
- PROGRAMAS:{n:"Programas",f:[["t","Título del plan"],["price","Precio (ej: 19 €)"],["unit","Debajo del precio (ej: pago único, / mes)"],["items","Qué incluye (una línea por punto)","textarea"],["cta","Texto del botón (ej: Quiero el pack)"],["hot","Destacarlo como el más recomendado",["No","Sí"]],["url","Enlace de pago (opcional; si lo dejas vacío, lleva al formulario de contacto)"]]},
+ PROGRAMAS:{n:"Programas",f:[["t","Título del plan"],["price","Precio (ej: 19 €)"],["unit","Debajo del precio (ej: pago único, / mes)"],["items","Qué incluye (una línea por punto)","textarea"],["cta","Texto del botón (ej: Quiero el pack)"],["hot","Destacarlo como el más recomendado",["No","Sí"]],["visible","Mostrar en la web",["Sí","No"]],["url","Enlace de pago (opcional; si lo dejas vacío, lleva al formulario de contacto)"]]},
  JUGADAS:{n:"Jugadas",f:[["t","Título"],["d","Descripción o pasos, breve"],["tipo","Enfoque",["Ofensiva","Defensiva"]],["tag","Acceso",["Gratis","Programa"]],["yt","ID de YouTube (déjalo vacío si subes archivo o pones enlace)"],["hg","Enlace en The Hoops Geek (opcional)"]],file:"file",acc:"video/*",fl:"Vídeo desde tu ordenador (opcional)"},
  VIDEOS:{n:"Vídeos",f:[["t","Título"],["d","Descripción"],["tag","Acceso",["Gratis","Programa"]],["yt","ID de YouTube (déjalo vacío si subes un archivo)"]],file:"file",acc:"video/*",fl:"Vídeo desde tu ordenador (opcional)"},
  PLAYBOOKS:{n:"Playbooks",f:[["t","Título"],["d","Descripción"],["n","Número de jugadas","number"],["tag","Acceso",["Gratis","Premium"]],["s","Enfoque",["Ofensiva","Defensiva","Ambas"]],["hg","Enlace del playbook en The Hoops Geek"]]},
@@ -89,9 +89,9 @@ function nav(){
  });
 }
 var DEF_PROGRAMAS=[
- {t:"Pack de jugadas",price:"19 €",unit:"pago único",items:["20 jugadas con diagrama animado","PDF imprimible para tu pizarra","Explicación de cada opción"],cta:"Quiero el pack",hot:"No",url:""},
- {t:"Curso completo",price:"79 €",unit:"pago único",items:["Más de 8 horas de vídeo","Ataque, defensa y fundamentos","Planificación de temporada","Plantillas de entrenamiento"],cta:"Quiero el curso",hot:"Sí",url:""},
- {t:"Membresía",price:"12 €",unit:"/ mes",items:["Contenido nuevo cada semana","Análisis de partidos","Comunidad privada de entrenadores"],cta:"Unirme",hot:"No",url:""}
+ {t:"Pack de jugadas",price:"19 €",unit:"pago único",items:["20 jugadas con diagrama animado","PDF imprimible para tu pizarra","Explicación de cada opción"],cta:"Quiero el pack",hot:"No",visible:"Sí",url:""},
+ {t:"Curso completo",price:"79 €",unit:"pago único",items:["Más de 8 horas de vídeo","Ataque, defensa y fundamentos","Planificación de temporada","Plantillas de entrenamiento"],cta:"Quiero el curso",hot:"Sí",visible:"Sí",url:""},
+ {t:"Membresía",price:"12 €",unit:"/ mes",items:["Contenido nuevo cada semana","Análisis de partidos","Comunidad privada de entrenadores"],cta:"Unirme",hot:"No",visible:"Sí",url:""}
 ];
 function view(k){
  var v=$("view");
